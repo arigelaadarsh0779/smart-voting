@@ -16,7 +16,6 @@ const voterDatabase = {
         voterId: '123456789012'
     }
 };
-
 // 10 Political Parties (VVPAT Style)
 const parties = [
     { id: 'inc', name: 'Rahul Gandhi', party: 'Indian National Congress', symbol: '🌺', color: '#1e3a8a' },
