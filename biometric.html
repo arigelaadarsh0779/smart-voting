@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2: Biometric | ECI Voting System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header gradient-warning text-dark text-center py-5">
+        <h1 class="d-flex align-items-center justify-content-center">
+    <img src="Election_Commission_of_India_Logo.svg.png" 
+         alt="ECI Logo" 
+         style="height:50px; margin-right:15px;">
+    Election Commission of India
+</h1>
+        <h1><i class="fas fa-fingerprint me-3"></i>Biometric Authentication</h1>
+        <p class="lead mb-2"><strong>Step 2/4:</strong> Select Verification Method</p>
+        <div class="voter-info" id="voterInfoDisplay">
+            <span class="badge bg-primary fs-6 px-3 py-2 me-2">
+                <i class="fas fa-user me-1"></i><span id="voterNameBio">Loading...</span>
+            </span>
+            <span class="badge bg-success fs-6 px-3 py-2">
+                <i class="fas fa-id-card me-1"></i><span id="voterIdBio">Loading...</span>
+            </span>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="card glass-effect shadow-xl border-0">
+                    <div class="card-body p-5 text-center">
+                        <!-- Error Alert -->
+                        <div id="noVoterDataAlert" class="alert alert-danger border-0 mb-4" style="display: none;">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            No voter data found. Please go back to Step 1.
+                            <a href="index.html" class="btn btn-danger btn-sm ms-3">← Back to Verification</a>
+                        </div>
+
+                        <div id="mainContent">
+                            <div class="mb-5">
+                                <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                                <h2 class="fw-bold mb-3">Choose Authentication Method</h2>
+                                <p class="lead text-muted">Select any one method (2 attempts allowed)</p>
+                            </div>
+
+                            <!-- Method Selection Cards -->
+                            <div class="row g-4 mb-5" id="methodSelection">
+                                <div class="col-md-4">
+                                    <div class="method-card" data-method="fingerprint" onclick="selectMethod('fingerprint', this)">
+                                        <div class="method-icon">
+                                            <i class="fas fa-fingerprint fa-3x text-primary"></i>
+                                        </div>
+                                        <h5>Fingerprint</h5>
+                                        <small class="text-muted">Aadhaar linked</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="method-card" data-method="iris" onclick="selectMethod('iris', this)">
+                                        <div class="method-icon">
+                                            <i class="fas fa-eye fa-3x text-info"></i>
+                                        </div>
+                                        <h5>Iris Scan</h5>
+                                        <small class="text-muted">High security</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="method-card" data-method="otp" onclick="selectMethod('otp', this)">
+                                        <div class="method-icon">
+                                            <i class="fas fa-mobile-alt fa-3x text-success"></i>
+                                        </div>
+                                        <h5>OTP</h5>
+                                        <small class="text-muted">Mobile SMS</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selected Method Display -->
+                            <div id="selectedMethodSection" style="display: none;">
+                                <div class="alert alert-info border-0 shadow-sm mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-info-circle fa-2x me-3"></i>
+                                        <div>
+                                            <h5 id="methodTitle">Selected Method</h5>
+                                            <p id="methodDesc" class="mb-0">Description</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fingerprint Section -->
+                                <div id="fingerprintSection" style="display: none;">
+                                    <div class="card border-primary p-4 text-center mb-4">
+                                        <i class="fas fa-fingerprint fa-4x text-primary mb-3"></i>
+                                        <h6>Place finger on scanner</h6>
+                                        <button class="btn btn-primary btn-lg w-100 mt-3 py-3" onclick="processBiometric('fingerprint')">
+                                            <span class="spinner-border spinner-border-sm d-none me-2" id="fpSpinner"></span>
+                                            START SCAN
+                                        </button>
+                                        <small class="text-muted d-block mt-2" id="fpAttempts">2 attempts left</small>
+                                    </div>
+                                </div>
+
+                                <!-- Iris Section -->
+                                <div id="irisSection" style="display: none;">
+                                    <div class="card border-info p-4 text-center mb-4">
+                                        <i class="fas fa-eye fa-4x text-info mb-3"></i>
+                                        <h6>Look into iris scanner</h6>
+                                        <button class="btn btn-info btn-lg w-100 mt-3 py-3" onclick="processBiometric('iris')">
+                                            <span class="spinner-border spinner-border-sm d-none me-2" id="irisSpinner"></span>
+                                            START SCAN
+                                        </button>
+                                        <small class="text-muted d-block mt-2" id="irisAttempts">2 attempts left</small>
+                                    </div>
+                                </div>
+
+                                <!-- OTP Section -->
+                                <div id="otpSection" style="display: none;">
+                                    <div class="card border-success p-4 text-center">
+                                        <i class="fas fa-mobile-alt fa-4x text-success mb-3"></i>
+                                        <h6>Mobile OTP</h6>
+                                        <button class="btn btn-success btn-lg w-100 mb-3 py-3" onclick="sendOTP()">
+                                            <span class="spinner-border spinner-border-sm d-none me-2" id="otpSpinner"></span>
+                                            SEND OTP
+                                        </button>
+                                        <div class="otp-input mt-4" id="otpInputSection" style="display: none;">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text bg-success text-white"><i class="fas fa-key"></i></span>
+                                                <input type="text" class="form-control form-control-lg text-center fw-bold fs-4" 
+                                                       id="otpInput" placeholder="6-digit OTP" maxlength="6">
+                                                <button class="btn btn-success" onclick="verifyOTP()">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </div>
+                                            <div class="text-center">
+                                                <small class="text-muted" id="mobileDisplay">+91 XXXXX XXXXX</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
